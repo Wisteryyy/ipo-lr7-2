@@ -1,23 +1,15 @@
 import json
 
-try:
-    with open('dump.json', 'r', encoding="utf-8") as file:
-        D = json.load(file)
+with open("dump.json", "r", encoding="utf-8") as file:
+    a = json.load(file)
 
-except FileNotFoundError:
-    print("Файл не найден.")
-    exit()
-
-Q = input("Введите номер квалификации (строка): ")
+q = input("Введите номер квалификации: ")
 
 found = False
-for item in D['data']['skills']:
-    if item['code'] == Q:
+for item in a:
+    if item['fields']['code'] == q:
         found = True
         print("=============== Найдено ===============")
-        print(f"{item['code']} >> Специальность \"{item['specialty_name']}\", ПТО")
-        print(f"{item['code']}-02 >> Квалификация \"{item['qualification_name']}\"")
-        break 
-
+        print(f"{item['fields']['code']} >> Специальность \"{item['fields']['title']}\", {item['fields']['c_type']}")
 if not found:
     print("=============== Не найдено ===============")
