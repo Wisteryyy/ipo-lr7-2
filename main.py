@@ -1,15 +1,15 @@
-import json # json
+import json # библиотека для работы с JSON-файлами
 
-with open("dump.json", "r", encoding="utf-8") as file: # открываем в режиме чтения
-    a = json.load(file) # считываем в переменную a
+with open("dump.json", "r", encoding="utf-8") as file: # открываем файл в режиме чтения
+    qualifications_data = json.load(file) # З+загружаем содержимое файла в переменную qualifications_data
 
-q = input("Введите номер квалификации: ") # вводим q
+qualification_code = input("Введите номер квалификации: ") # запрашиваем у пользователя код квалификации
 
-b = False # переменная b булевая ложная
-for i in a: # перебераем ключи в a
-    if i['fields']['code'] == q: # если равны
-        b = True # то b становится тру
+found = False # логическая переменная для отслеживания найденной квалификации
+for qualification in qualifications_data: # перебираем записи в qualifications_data
+    if qualification['fields']['code'] == qualification_code: # если код квалификации совпадает с введенным
+        found = True # устанавливаем флаг в True, так как квалификация найдена
         print("=============== Найдено ===============") # выводим
-        print(f"{i['fields']['code']} >> Специальность \"{i['fields']['title']}\", {i['fields']['c_type']}") # выводим по ключам
-if not b: # если b не тру
+        print(f"{qualification['fields']['code']} >> Специальность \"{qualification['fields']['title']}\", {qualification['fields']['c_type']}") # выводим детали
+if not found: # если ни одна квалификация не была найдена
     print("=============== Не найдено ===============") # выводим
