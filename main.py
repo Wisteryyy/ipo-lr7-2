@@ -1,15 +1,24 @@
 import json # библиотека для работы с JSON-файлами
 
-with open("dump.json", "r", encoding="utf-8") as file: # открываем файл в режиме чтения
-    qualifications_data = json.load(file) # З+загружаем содержимое файла в переменную qualifications_data
+with open("dump.json", 'r', encoding='utf-8') as file: # открываем файл "dump.json" для чтения в кодировке UTF-8
+    qualifications_data = json.load(file) # загружаем содержимое файла в переменную qualifications_data
 
-qualification_code = input("Введите номер квалификации: ") # запрашиваем у пользователя код квалификации
+while True: # запускаем бесконечный цикл
+    status = False # инициализируем переменную status  False, чтобы отслеживать, найдена ли квалификация
+    find = input("Введите номер квалификации: ") # запрашиваем ввод номера квалификации
 
-found = False # логическая переменная для отслеживания найденной квалификации
-for qualification in qualifications_data: # перебираем записи в qualifications_data
-    if qualification['fields']['code'] == qualification_code: # если код квалификации совпадает с введенным
-        found = True # устанавливаем флаг в True, так как квалификация найдена
-        print("=============== Найдено ===============") # выводим
-        print(f"{qualification['fields']['code']} >> Специальность \"{qualification['fields']['title']}\", {qualification['fields']['c_type']}") # выводим детали
-if not found: # если ни одна квалификация не была найдена
-    print("=============== Не найдено ===============") # выводим
+    for qualification in qualifications_data: # проходим через каждый элемент
+        if qualification['model'] == 'data.skill': # проверяем, является ли модель объекта квалификацией
+            if qualification["fields"]['code'] == find: # если они равны
+                for specialty in qualifications_data: # проходим по всем специальностям
+                    if specialty['model'] == 'data.specialty': # проверяем, является ли модель объекта специальностью 
+                        if specialty['pk'] == qualification['fields']['specialty']: # сравниваем изначальный ключ специальности с полем specialty в квалификации
+                            print("=============== Найдено ===============") # выводим если найдена
+                            print( # выводим
+                                f'{specialty["fields"]["code"]} >> Специальность'
+                                f' {specialty["fields"]["title"]}, {specialty["fields"]["c_type"]}')
+                            print(f"{qualification['fields']['code']} >> Квалификация {qualification['fields']['title']}")
+                            status = True # устанавливаем статус True, так как квалификация найдена
+
+    if not status: # если после завершения цикла ничего не найдено, выводим сообщение об этом
+        print("=============== Не найдено ===============")  
